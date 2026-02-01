@@ -1,0 +1,58 @@
+<mvc:View 
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="medical.inventory.controller.Main">
+
+<App>
+<Page title="Medical Inventory Management System">
+
+<VBox class="sapUiMediumMargin">
+
+<Text text="Medical Inventory Dashboard" class="headerTitle"/>
+
+<SearchField width="70%" placeholder="Search Medicine" liveChange="onSearch"/>
+
+<Button text="Add Medicine" type="Emphasized" press="onOpenAddDialog" class="sapUiSmallMarginTop"/>
+
+<Table id="medTable" items="{/medicines}" class="sapUiSmallMarginTop">
+
+  <columns>
+    <Column><Text text="Medicine"/></Column>
+    <Column><Text text="Price ₹"/></Column>
+    <Column><Text text="Stock"/></Column>
+    <Column><Text text="Status"/></Column>
+    <Column><Text text="Action"/></Column>
+  </columns>
+
+  <items>
+    <ColumnListItem>
+      <cells>
+
+        <Text text="{name}"/>
+        <Text text="{price}"/>
+
+        <!-- Stock Number -->
+        <Text text="{stock}"/>
+
+        <!-- Stock Status -->
+        <ObjectStatus
+          text="{= ${stock} &lt; 10 ? 'LOW STOCK' : 'AVAILABLE' }"
+          state="{= ${stock} &lt; 10 ? 'Error' : 'Success' }"/>
+
+        <!-- Buttons -->
+        <HBox>
+          <Button text="Edit" press="onEdit"/>
+          <Button text="Delete" type="Reject" press="onDelete"/>
+        </HBox>
+
+      </cells>
+    </ColumnListItem>
+  </items>
+
+</Table>
+
+</VBox>
+</Page>
+</App>
+
+</mvc:View>

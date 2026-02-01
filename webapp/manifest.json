@@ -1,0 +1,15 @@
+{
+  "sap.app": {
+    "id": "medical.inventory",
+    "type": "application",
+    "title": "Medical Inventory"
+  },
+
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "medical.inventory.view.Main",
+      "type": "XML",
+      "async": true
+    }
+  }
+}

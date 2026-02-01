@@ -1,0 +1,11 @@
+{
+  "name": "medical-inventory",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "@ui5/cli": "^4.0.41"
+  },
+  "scripts": {
+    "start": "ui5 serve"
+  }
+}
