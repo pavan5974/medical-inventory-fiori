@@ -3,56 +3,55 @@
     xmlns="sap.m"
     controllerName="medical.inventory.controller.Main">
 
-<App>
-<Page title="Medical Inventory Management System">
+  <App>
+    <Page title="Medical Inventory Management System">
 
-<VBox class="sapUiMediumMargin">
+      <VBox class="sapUiMediumMargin">
 
-<Text text="Medical Inventory Dashboard" class="headerTitle"/>
+        <Text text="Medical Inventory Dashboard" class="headerTitle"/>
 
-<SearchField width="70%" placeholder="Search Medicine" liveChange="onSearch"/>
+        <SearchField width="70%" placeholder="Search Medicine" liveChange="onSearch"/>
 
-<Button text="Add Medicine" type="Emphasized" press="onOpenAddDialog" class="sapUiSmallMarginTop"/>
+        <Button text="Add Medicine" type="Emphasized" press="onOpenAddDialog" class="sapUiSmallMarginTop"/>
 
-<Table id="medTable" items="{/medicines}" class="sapUiSmallMarginTop">
+        <Table id="medTable" items="{/medicines}" class="sapUiSmallMarginTop">
 
-  <columns>
-    <Column><Text text="Medicine"/></Column>
-    <Column><Text text="Price ₹"/></Column>
-    <Column><Text text="Stock"/></Column>
-    <Column><Text text="Status"/></Column>
-    <Column><Text text="Action"/></Column>
-  </columns>
+          <columns>
+            <Column><Text text="Medicine"/></Column>
+            <Column><Text text="Price ₹"/></Column>
+            <Column><Text text="Stock"/></Column>
+            <Column><Text text="Status"/></Column>
+            <Column><Text text="Action"/></Column>
+          </columns>
 
-  <items>
-    <ColumnListItem>
-      <cells>
+          <items>
+            <ColumnListItem>
+              <cells>
 
-        <Text text="{name}"/>
-        <Text text="{price}"/>
+                <Text text="{name}"/>
+                <Text text="{price}"/>
+                <Text text="{stock}"/>
 
-        <!-- Stock Number -->
-        <Text text="{stock}"/>
+                <!-- Stock Status -->
+                <ObjectStatus
+                  text="{= Number(${stock}) === 0 ? 'OUT OF STOCK' : (Number(${stock}) < 10 ? 'LOW STOCK' : 'AVAILABLE') }"
+                  state="{= Number(${stock}) === 0 ? 'Error' : (Number(${stock}) < 10 ? 'Error' : 'Success') }"
+                  icon="{= Number(${stock}) === 0 ? 'sap-icon://alert' : '' }"/>
 
-        <!-- Stock Status -->
-        <ObjectStatus
-          text="{= ${stock} &lt; 10 ? 'LOW STOCK' : 'AVAILABLE' }"
-          state="{= ${stock} &lt; 10 ? 'Error' : 'Success' }"/>
+                <!-- Buttons -->
+                <HBox>
+                  <Button text="Edit" press="onEdit"/>
+                  <Button text="Delete" type="Reject" press="onDelete"/>
+                </HBox>
 
-        <!-- Buttons -->
-        <HBox>
-          <Button text="Edit" press="onEdit"/>
-          <Button text="Delete" type="Reject" press="onDelete"/>
-        </HBox>
+              </cells>
+            </ColumnListItem>
+          </items>
 
-      </cells>
-    </ColumnListItem>
-  </items>
+        </Table>
 
-</Table>
-
-</VBox>
-</Page>
-</App>
+      </VBox>
+    </Page>
+  </App>
 
 </mvc:View>
