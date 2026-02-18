@@ -14,12 +14,11 @@ sap.ui.define([
   return Controller.extend("medical.inventory.controller.Main", {
 
     onInit: function () {
-
       var data = {
         medicines: [
           { name: "Paracetamol", price: 20, stock: 50 },
           { name: "Crocin", price: 30, stock: 8 },
-          { name: "Aspirin", price: 25, stock: 5 },
+          { name: "Aspirin", price: 25, stock: 0 },       // OUT OF STOCK example
           { name: "Ibuprofen", price: 40, stock: 15 },
           { name: "Amoxicillin", price: 50, stock: 20 },
           { name: "Cough Syrup", price: 35, stock: 12 },
@@ -44,7 +43,6 @@ sap.ui.define([
       localStorage.setItem("medData", JSON.stringify(data));
     },
 
-    // SEARCH
     onSearch: function (oEvent) {
       var sValue = oEvent.getSource().getValue();
       var oTable = this.byId("medTable");
@@ -57,7 +55,6 @@ sap.ui.define([
       oBinding.filter(aFilters);
     },
 
-    // ADD MEDICINE
     onOpenAddDialog: function () {
       var that = this;
 
@@ -75,7 +72,6 @@ sap.ui.define([
           beginButton: new Button({
             text: "Save",
             press: function () {
-
               var name = that.byId("addName").getValue();
               var price = that.byId("addPrice").getValue();
               var stock = that.byId("addStock").getValue();
@@ -91,12 +87,11 @@ sap.ui.define([
               aData.push({
                 name: name,
                 price: parseFloat(price),
-                stock: parseInt(stock)
+                stock: parseInt(stock)      // Ensure stock is integer
               });
 
               oModel.setProperty("/medicines", aData);
               that.saveLocal();
-
               MessageToast.show("Medicine Added");
 
               that.byId("addName").setValue("");
@@ -121,7 +116,6 @@ sap.ui.define([
       this.oDialog.open();
     },
 
-    // DELETE MEDICINE
     onDelete: function (oEvent) {
       var oModel = this.getView().getModel();
       var oItem = oEvent.getSource().getParent().getParent();
@@ -136,7 +130,6 @@ sap.ui.define([
       MessageToast.show("Deleted");
     },
 
-    // EDIT MEDICINE
     onEdit: function (oEvent) {
       var that = this;
 
@@ -159,7 +152,6 @@ sap.ui.define([
           beginButton: new Button({
             text: "Update",
             press: function () {
-
               var name = that.byId("editName").getValue();
               var price = that.byId("editPrice").getValue();
               var stock = that.byId("editStock").getValue();
@@ -193,9 +185,9 @@ sap.ui.define([
         this.getView().addDependent(this.oEditDialog);
       }
 
-      this.byId("editName").setValue(oData.name);
-      this.byId("editPrice").setValue(oData.price);
-      this.byId("editStock").setValue(oData.stock);
+      that.byId("editName").setValue(oData.name);
+      that.byId("editPrice").setValue(oData.price);
+      that.byId("editStock").setValue(oData.stock);
 
       this.oEditDialog.open();
     }
