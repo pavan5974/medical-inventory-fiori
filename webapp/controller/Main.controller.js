@@ -14,7 +14,7 @@ sap.ui.define([
   return Controller.extend("medical.inventory.controller.Main", {
 
     onInit: function () {
-      // Preload 10 medicines
+
       var data = {
         medicines: [
           { name: "Paracetamol", price: 20, stock: 50 },
@@ -33,7 +33,6 @@ sap.ui.define([
       var oModel = new JSONModel(data);
       this.getView().setModel(oModel);
 
-      // Load from localStorage if available
       var storedData = localStorage.getItem("medData");
       if (storedData) {
         oModel.setData(JSON.parse(storedData));
@@ -58,7 +57,7 @@ sap.ui.define([
       oBinding.filter(aFilters);
     },
 
-    // ADD MEDICINE DIALOG
+    // ADD MEDICINE
     onOpenAddDialog: function () {
       var that = this;
 
@@ -76,11 +75,11 @@ sap.ui.define([
           beginButton: new Button({
             text: "Save",
             press: function () {
+
               var name = that.byId("addName").getValue();
               var price = that.byId("addPrice").getValue();
               var stock = that.byId("addStock").getValue();
 
-              // Validate inputs
               if (!name || !price || !stock) {
                 MessageToast.show("Please fill all fields");
                 return;
@@ -97,9 +96,9 @@ sap.ui.define([
 
               oModel.setProperty("/medicines", aData);
               that.saveLocal();
+
               MessageToast.show("Medicine Added");
 
-              // Clear input fields
               that.byId("addName").setValue("");
               that.byId("addPrice").setValue("");
               that.byId("addStock").setValue("");
@@ -130,15 +129,75 @@ sap.ui.define([
 
       var aData = oModel.getProperty("/medicines");
       aData.splice(index, 1);
-      oModel.setProperty("/medicines", aData);
 
+      oModel.setProperty("/medicines", aData);
       this.saveLocal();
+
       MessageToast.show("Deleted");
     },
 
-    // EDIT (Dummy)
-    onEdit: function () {
-      MessageToast.show("Edit feature can be extended");
+    // EDIT MEDICINE
+    onEdit: function (oEvent) {
+      var that = this;
+
+      var oItem = oEvent.getSource().getParent().getParent();
+      var oContext = oItem.getBindingContext();
+      var sPath = oContext.getPath();
+      var oData = this.getView().getModel().getProperty(sPath);
+
+      if (!this.oEditDialog) {
+        this.oEditDialog = new Dialog({
+          title: "Edit Medicine",
+          content: new VBox({
+            items: [
+              new Input(this.createId("editName"), { placeholder: "Medicine Name" }),
+              new Input(this.createId("editPrice"), { placeholder: "Price", type: "Number" }),
+              new Input(this.createId("editStock"), { placeholder: "Stock", type: "Number" })
+            ]
+          }),
+
+          beginButton: new Button({
+            text: "Update",
+            press: function () {
+
+              var name = that.byId("editName").getValue();
+              var price = that.byId("editPrice").getValue();
+              var stock = that.byId("editStock").getValue();
+
+              if (!name || !price || !stock) {
+                MessageToast.show("Please fill all fields");
+                return;
+              }
+
+              var oModel = that.getView().getModel();
+
+              oModel.setProperty(sPath + "/name", name);
+              oModel.setProperty(sPath + "/price", parseFloat(price));
+              oModel.setProperty(sPath + "/stock", parseInt(stock));
+
+              that.saveLocal();
+              MessageToast.show("Medicine Updated");
+
+              that.oEditDialog.close();
+            }
+          }),
+
+          endButton: new Button({
+            text: "Cancel",
+            press: function () {
+              that.oEditDialog.close();
+            }
+          })
+        });
+
+        this.getView().addDependent(this.oEditDialog);
+      }
+
+      this.byId("editName").setValue(oData.name);
+      this.byId("editPrice").setValue(oData.price);
+      this.byId("editStock").setValue(oData.stock);
+
+      this.oEditDialog.open();
     }
 
   });
